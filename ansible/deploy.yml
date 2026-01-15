@@ -39,7 +39,7 @@
 
   - name: Wait for MySQL to be ready
     wait_for:
-      host: mysql
+      host: 127.0.0.1
       port: 3306
       delay: 5
       timeout: 60
