@@ -7,7 +7,7 @@ pipeline {
  }
  stages {
    stage('Build Maven') {
-     steps { sh 'mvn clean package -DskipTests' }
+     steps { sh './mvnw clean package -DskipTests' }
    }
    stage('Build Docker Image') {
      steps { sh 'docker build -t $NEXUS/$IMAGE:$TAG .' }
