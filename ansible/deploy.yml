@@ -37,7 +37,7 @@
   - name: Run Spring Boot container
     docker_container:
       name: spring_app
-      image: localhost:8083/devops-app:latest
+      image: "localhost:8083/devops-app:{{ IMAGE_TAG }}"
       state: started
       restart_policy: always
       ports:
