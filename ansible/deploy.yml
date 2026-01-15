@@ -1,0 +1,45 @@
+- hosts: appserver
+  become: yes
+  vars:
+    nexus_url: "localhost:8083"
+    image_name: "devops-app"
+    container_name: "spring_app"
+  tasks:
+    - name: Run MySQL
+      docker_container:
+        name: mysql
+        image: mysql:8
+        state: started
+        restart_policy: always
+        env:
+          MYSQL_DATABASE: devopsdb
+          MYSQL_USER: devops
+          MYSQL_PASSWORD: devops123
+          MYSQL_ROOT_PASSWORD: root123
+        ports:
+          - "3306:3306"
+
+    - name: Login Nexus
+      docker_login:
+        registry_url: "http://{{ nexus_url }}"
+        username: "{{ nexus_user }}"
+        password: "{{ nexus_pass }}"
+
+    - name: Pull App Image
+      docker_image:
+        name: "{{ nexus_url }}/{{ image_name }}:{{ image_tag }}"
+        source: pull
+
+    - name: Remove old App Container
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: yes
+
+    - name: Run Spring App
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ nexus_url }}/{{ image_name }}:{{ image_tag }}"
+        state: started
+        ports:
+          - "8085:8080"
