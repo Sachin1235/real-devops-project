@@ -1,5 +1,4 @@
 - hosts: appserver
-  become: yes
   vars:
     nexus_url: "localhost:8083"
     image_name: "devops-app"
